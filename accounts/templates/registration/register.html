@@ -1,0 +1,70 @@
+
+{% extends 'base.html' %}
+
+{% block content %} 
+
+<form class="mb-3" method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  
+  <div class="mb-3">
+    <button class="btn btn-primary d-grid w-100" type="submit">Sign up</button>
+  </div>
+</form>
+
+
+
+{% endblock %} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+  <title>User Registration</title>
+</head>
+<body>
+  <h1>Register</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+  </form>
+</body>
+</html>

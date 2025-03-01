@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="breadcrumb-item text-dark" href="#">Home</a>
+                <a class="breadcrumb-item text-dark" href="#">Products</a>
+                <span class="breadcrumb-item active">{{product.name}}</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+
+<!-- Shop Detail Start -->
+<div class="container-fluid pb-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 mb-30">
+            <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner bg-light">
+                    <div class="carousel-item active">
+                        <img class="w-100 h-100" src="{% static 'img/product-1.jpg' %}" alt="Image">
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="col-lg-7 h-auto mb-30">
+            <div class="h-100 bg-light p-30">
+                <h3>{{ product.name }}</h3>
+                <div class="d-flex mb-3">
+                    <div class="text-primary mr-2">
+                        {% for i in stars %}
+                            <small class="fas fa-star"></small>
+                        {% endfor %}
+                        {% for i in uncolored_stars %}
+                            <small class="far fa-star"></small>
+                        {% endfor %}
+                    </div>
+                    <small class="pt-1">({{product.reviews.count}} Reviews)</small>
+                </div>
+                <h3 class="font-weight-semi-bold mb-4">${{ product.price }}</h3>
+                <p class="mb-4">{{ product.description }}</p>
+                
+                <form action="{% url 'products:add_to_cart' product.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="d-flex align-items-center mb-4 pt-2">
+                        <div class="input-group quantity mr-3" style="width: 130px;">
+                            
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary btn-minus">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input type="text" name="quantity" class="form-control bg-secondary border-0 text-center" value="1">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-primary btn-plus">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+                    </div>
+                </form>
+                <div class="d-flex pt-2">
+                    <strong class="text-dark mr-2">Share on:</strong>
+                    <div class="d-inline-flex">
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a class="text-dark px-2" href="">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="bg-light p-30">
+                <div class="nav nav-tabs mb-4">
+                    <a class="nav-item nav-link text-dark active" data-toggle="tab" href="#tab-pane-1">Reviews ({{product.reviews.count}})</a>
+                    <a class="nav-item nav-link text-dark" data-toggle="tab" href="#tab-pane-2">Reviews Analysis</a>
+
+
+                </div>
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-pane-1">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4 class="mb-4">{{product.reviews.count}} reviews for "{{product.name}}"</h4>
+
+                                {% for review in product.reviews.all %}
+                                    <div class="media mb-4">
+                                        <img src="img/user.jpg" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
+                                        <div class="media-body">
+                                            <h6>{{review.reviewer}}<small> - <i>{{review.created_at}}</i></small></h6>
+                                            
+                                            <p>{{review.comment}}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="mb-4">Leave a review</h4>
+                                
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="message">Your Review *</label>
+                                        {{ form.comment }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="name">Your Name *</label>
+                                        {{ form.reviewer }}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email">Your Email *</label>
+                                        {{ form.email }}
+
+                                    </div>
+                                    <div class="form-group mb-0">
+                                        <input type="submit" value="Leave Your Review" class="btn btn-primary px-3">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="tab-pane fade" id="tab-pane-2">
+                        <div class="row">
+
+                            <div class="graph-div" id="graph-div">
+                                {% if chart %}
+                                    <div class="graph d-flex justify-content-center">
+                                        <img src="data:image/png;base64,{{chart|safe}}">
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="yelp-result-table" id="yelp-result-table">
+                                {% if table %}
+                                    <table class="bg-light table table-hover table-bordered">
+                                        <thead>
+                                        <tr class="table-success">
+                                            <th scope="col">Sentiment</th>
+                                            <th scope="col">Reviews</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for sentiment in sentiments %}
+                                            {% for review in reviews %}
+                            
+                                                {% if forloop.counter == forloop.parentloop.counter %}
+                                                <tr>
+                                                    <td>{{sentiment}}{{table}}</td>
+                                                    <td>{{review}}</td>
+                                                </tr>
+                                                {% endif %}
+                        
+                                            {% endfor %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Shop Detail End -->
+
+
+
+{% endblock %}
