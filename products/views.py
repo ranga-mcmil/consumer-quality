@@ -40,6 +40,32 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
         reviews = [review.comment for review in Review.objects.filter(product=self.object)]
 
         result = a.yelp(reviews)
+
+
+        print("")
+        print("")
+        print("")
+        print("")
+        print("result result result result result result")
+        print("")
+        print(result)
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+        print("")
+
+
         chart, reviews, sentiments, _rating_= result
 
         stars = sum(_rating_) / len(_rating_) if _rating_ else 0  
@@ -48,7 +74,6 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
         context["reviews"] = reviews
         context["sentiments"] = sentiments
         context["stars"] = range(round(stars))
-
         context["uncolored_stars"] = range(5 - round(stars))
 
 

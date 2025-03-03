@@ -50,8 +50,8 @@ def yelp(reviews):
     matplotlib.use("Agg")
     plt.bar(["Very Bad","Bad","Meh","Good","Very Good"], sentiment_amount, color=("green"))
     plt.title("Reviews")
-    plt.xlabel("Sentiment levels")
-    plt.ylabel("Reviews")
+    plt.xlabel("Reviews")
+    plt.ylabel("Sentiment levels")
     plt.tight_layout()
     fig = plt.gcf()
     
