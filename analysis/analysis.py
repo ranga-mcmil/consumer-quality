@@ -17,7 +17,7 @@ MODEL = AutoModelForSequenceClassification.from_pretrained("nlptown/bert-base-mu
 
 
 
-_rating_ = []
+RATING = []
 
 
 #calculating sentiment
@@ -27,7 +27,7 @@ def calculating(sample):
     result = MODEL(tokens)
     rated_result = int(torch.argmax(result.logits))
 
-    _rating_.append(rated_result)
+    RATING.append(rated_result)
 
     
     #matching sentiment score with words
@@ -37,11 +37,16 @@ def calculating(sample):
 
 #getting sentiment of yelp reviews
 def yelp(reviews):
-    
+    global RATING
+    RATING.clear()  # 🟢 Clear before using it
+
     #putting reviews in a dataframe and calculating each review's sentiment
     df = pd.DataFrame(np.array(reviews), columns=["review"])
     
+    
     df["sentiment"] = df["review"].apply(lambda x: calculating(x[:512]))
+
+
 
     #seeing how many reviews have each score of sentiment
     sentiment_amount = [df["sentiment"].loc[df["sentiment"] == SENTIMENTS[i]].size for i in range(len(SENTIMENTS))]
@@ -65,5 +70,8 @@ def yelp(reviews):
     uri =  urllib.parse.quote(string)
     
     review_short = [review[:512] + "..." if len(review) > 512 else review for review in reviews]
+
+    _rating_ = RATING.copy()  # 🟢 Copy the list before clearing
+    RATING.clear()  # Clear again for next batch
     
     return [uri, review_short, df.sentiment.values.tolist(), _rating_]

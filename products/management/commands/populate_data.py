@@ -5,6 +5,8 @@ from django.core.files import File
 from accounts.models import User
 from products.models import Category, Product, Review
 from faker import Faker
+from analysis import analysis as a
+
 
 fake = Faker()
 
@@ -123,5 +125,10 @@ class Command(BaseCommand):
                     comment=comment,
                     email=fake.unique.email()
                 )
+
+            # reviews = [review.comment for review in Review.objects.filter(product=product)]
+            # result = a.yelp(reviews)
+            # product.modelling_data = result
+            # product.save()
 
         self.stdout.write(self.style.SUCCESS("Reviews added with varied distributions successfully"))
