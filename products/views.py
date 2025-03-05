@@ -37,15 +37,15 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        chart, reviews, sentiments, _rating_= self.object.modelling_data
+        # chart, reviews, sentiments, _rating_= self.object.modelling_data
 
 
         
-        # reviews = [review.comment for review in Review.objects.filter(product=self.object)]
+        reviews = [review.comment for review in Review.objects.filter(product=self.object)]
 
-        # result = a.yelp(reviews)
+        result = a.yelp(reviews)
 
-        # chart, reviews, sentiments, _rating_ = result
+        chart, reviews, sentiments, _rating_ = result
 
         stars = sum(_rating_) / len(_rating_) if _rating_ else 0  
 
