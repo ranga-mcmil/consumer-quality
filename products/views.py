@@ -39,8 +39,6 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
 
         # chart, reviews, sentiments, _rating_= self.object.modelling_data
 
-
-        
         reviews = [review.comment for review in Review.objects.filter(product=self.object)]
 
         result = a.yelp(reviews)
